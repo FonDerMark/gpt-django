@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import dotenv
+from os import environ as env
 
 dotenv.load_dotenv()
 
@@ -24,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*8l40#ndw4+f!c&r$xz7u9dhmw+l%f=)r3^ynl)a5t$1c$tp=#'
+SECRET_KEY = env['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ['DEBUG'])
+DEBUG = bool(env['DEBUG'])
 
 ALLOWED_HOSTS = []
 
