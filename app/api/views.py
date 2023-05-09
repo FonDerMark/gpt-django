@@ -7,7 +7,7 @@ from .request_to_gpt import request_to_gpt
 class Gpt(View):
 
     def get(self, request):
-        return render(request, 'html/test.html')
+        return render(request, 'html/index.html')
   
     def post(self, request):
         question = request.POST['question']
@@ -15,7 +15,7 @@ class Gpt(View):
         context = {
             'answer': response,
         }
-        return render(request, 'html/test.html', context=context)
+        return render(request, 'html/index.html', context=context)
     
     
 class Api(View):
