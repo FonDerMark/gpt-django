@@ -9,11 +9,13 @@
     <link rel="stylesheet" href="">
   </head>
   <body>
-    <form method="post" enctype="application/x-www-form-urlencoded">
-      {% csrf_token %}
-      <input type="text" name="question">
-      <button type="submit">Submit</button>
-    </form>
-    {{ answer }}
+    <main class="main">
+      <form method="post" enctype="application/x-www-form-urlencoded">
+        {% csrf_token %}
+        <input type="text" name="question">
+        <button type="submit">Submit</button>
+      </form>
+      {{ answer }}
+    </main>
   </body>
 </html>
