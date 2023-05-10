@@ -9,4 +9,7 @@ class User_settings(models.Model):
         ('theb', 'thed') ,
     ]
     gpt_mode = models.CharField(max_length=20, choices=choises_mode, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.gpt_mode.capitalize()
