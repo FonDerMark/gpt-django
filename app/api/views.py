@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
+from django.contrib.auth.models import User
 
 from .request_to_gpt import request_to_gpt
 from .models import Messages
@@ -8,16 +9,22 @@ from .models import Messages
 class Gpt(View):
 
     def get(self, request):
-        return render(request, 'html/index.html')
+        messages = Messages.objects.filter(user_id=request.user.id)[0:10]
+        context = {
+            'messages': messages,
+        }
+        return render(request, 'html/index.html', context=context)
   
     def post(self, request):
         question = request.POST['question']
         answer = request_to_gpt(question)
-        new_message = Messages()
-        new_message.text = answer
+        user = request.user
+        new_message = Messages(text=answer, user=User.objects.get(id=user.id))
         new_message.save()
+        messages = Messages.objects.filter(user_id=request.user.id)[1:11]
         context = {
             'answer': answer,
+            'messages': messages,
         }
         return render(request, 'html/index.html', context=context)
     

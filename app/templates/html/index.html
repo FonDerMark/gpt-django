@@ -6,7 +6,7 @@
   <div class="d-flex flex-column align-items-center">
     <form method="post" enctype="application/x-www-form-urlencoded" id="gpt_form" class="m-2">
       {% csrf_token %}
-      <textarea type="text" name="question" rows="4" cols="70" autofocus></textarea>
+      <textarea type="text" name="question" rows="4" cols="70" placeholder="Введите свой вопрос в этом окне" autofocus></textarea>
     </form>
     <div>
       {% if user.is_authenticated %}
@@ -15,7 +15,14 @@
         <a href="{% url 'login' %}"><button class="btn btn-primary">Войти</button></a>
       {% endif %}
     </div>
-    {{ answer }}
+    <div class="border border-info rounded m-3 p-1">
+      <h4>{{ answer }}</h4>
+    </div >
+    <ul>
+      {% for message in messages %}
+        <li>{{ message.text }}</li>
+      {% endfor %}
+    </ul>
   </div>
 </main>
 {% endblock main %}

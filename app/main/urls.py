@@ -23,6 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('register/', user_views.register, name='register'),
-    path('users/', user_views.login, name='login'),
+    path('register/', user_views._register, name='register'),
+    path('users/', user_views._login, name='login'),
 ]
