@@ -12,12 +12,10 @@
       {% if user.is_authenticated %}
         <button type="submit" form="gpt_form" class="btn btn-primary">Спросить</button>
       {% else %}
-        <button type="submit" form="gpt_form" class="btn btn-primary" disabled>Спросить</button>
+        <a href="{% url 'login' %}"><button class="btn btn-primary">Войти</button></a>
       {% endif %}
     </div>
     {{ answer }}
   </div>
 </main>
 {% endblock main %}
-
-  
