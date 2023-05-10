@@ -6,10 +6,14 @@
   <div class="d-flex flex-column align-items-center">
     <form method="post" enctype="application/x-www-form-urlencoded" id="gpt_form" class="m-2">
       {% csrf_token %}
-      <textarea type="text" name="question" rows="6" cols="40"></textarea>
+      <textarea type="text" name="question" rows="4" cols="70" autofocus></textarea>
     </form>
     <div>
-      <button type="submit" form="gpt_form" class="btn btn-primary">Submit</button>
+      {% if user.is_authenticated %}
+        <button type="submit" form="gpt_form" class="btn btn-primary">Спросить</button>
+      {% else %}
+        <button type="submit" form="gpt_form" class="btn btn-primary" disabled>Спросить</button>
+      {% endif %}
     </div>
     {{ answer }}
   </div>
