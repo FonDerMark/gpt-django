@@ -18,9 +18,9 @@
     <div class="border border-info rounded m-3 p-1">
       <h4>{{ answer }}</h4>
     </div >
-    <ul>
+    <ul class="list-group list-group-flush">
       {% for message in messages %}
-        <li>{{ message.text }}</li>
+        <li class="list-group-item">{{ message.text }}</li>
       {% endfor %}
     </ul>
   </div>
