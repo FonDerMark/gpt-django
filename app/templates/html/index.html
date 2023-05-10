@@ -1,56 +1,19 @@
+{% extends 'html/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GPT-4</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-  </head>
-  <body>
-    <main>
-      <div class="d-flex flex-column align-items-center">
-        <form method="post" enctype="application/x-www-form-urlencoded" id="gpt_form" class="m-2">
-          {% csrf_token %}
-          <textarea type="text" name="question" rows="6" cols="40"></textarea>
-        </form>
-        <div>
-          <button type="submit" form="gpt_form" class="btn btn-primary">Submit</button>
-        </div>
-        {{ answer }}
-      </div>
-      <table class="table ml-3 mr-3">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
-    </main>
-  </body>
-</html>
+
+{% block main %}
+<main>
+  <div class="d-flex flex-column align-items-center">
+    <form method="post" enctype="application/x-www-form-urlencoded" id="gpt_form" class="m-2">
+      {% csrf_token %}
+      <textarea type="text" name="question" rows="6" cols="40"></textarea>
+    </form>
+    <div>
+      <button type="submit" form="gpt_form" class="btn btn-primary">Submit</button>
+    </div>
+    {{ answer }}
+  </div>
+</main>
+{% endblock main %}
+
+  

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>GPT-4</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+        <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-dark bg-primary">
+                <!-- Navbar content -->
+            </nav>
+        </header>
+
+        <main>{% block main %}{% endblock main %}</main>
+
+        <footer>
+
+        </footer>
+    </body>
+</html>
