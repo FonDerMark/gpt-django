@@ -1,7 +1,8 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
+
 from .request_to_gpt import request_to_gpt
+from .models import Messages
 
 
 class Gpt(View):
@@ -11,9 +12,12 @@ class Gpt(View):
   
     def post(self, request):
         question = request.POST['question']
-        response = request_to_gpt(question)
+        answer = request_to_gpt(question)
+        new_message = Messages()
+        new_message.text = answer
+        new_message.save()
         context = {
-            'answer': response,
+            'answer': answer,
         }
         return render(request, 'html/index.html', context=context)
     
