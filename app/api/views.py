@@ -7,11 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from os import environ as env
 from django.core.serializers.json import DjangoJSONEncoder
+import datetime
+import time
 
 
 from .request_to_gpt import request_to_gpt
 from .models import Messages
-from users.models import User_settings
+from users.models import User_settings, Telegram_user
 
 
 @login_required
@@ -51,26 +53,66 @@ class Gpt(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class Api(View):
-
-    def get(self, request):
-        return HttpResponse('ОК')
     
+    # запрос в чат GPT
     def post(self, request):
-        print(request.POST)
         user_id = request.POST['user_id']
-        username = request.POST['username']
-        firstname = request.POST['firstname']
-        lastname = request.POST['lastname']
         question = request.POST['question']
-        answer = request_to_gpt(question)
+        user = self.get_or_create(request=request, user_id=user_id)
+        if user.day_of_limit == datetime.date.today():
+            if user.day_limit_of_messages > 0:
+                answer = request_to_gpt(question)
+                while answer == '':
+                    time.sleep(1)
+                    answer = request_to_gpt(question)
+                user.day_limit_of_messages -= 1
+                user.save()
+                print(1)
+            elif user.extra_messages > 0:
+                answer = request_to_gpt(question)
+                while answer == '':
+                    time.sleep(1)
+                    answer = request_to_gpt(question)
+                user.extra_messages -= 1
+                user.save()
+                print(2)
+            else:
+                print(3)
+                answer = 'Вы исчерпали лимит сообщений'
+        else:
+            answer = request_to_gpt(question)
+            while answer == '':
+                time.sleep(1)
+                answer = request_to_gpt(question)
+            user.extra_messages = 9
+            user.save()
+
+        print(answer)
         data = {
             'user_id': user_id,
             'answer': answer,
+            'extra_messages': user.extra_messages,
+            'day_limit_of_messages': user.day_limit_of_messages,
         }
         try:
             return JsonResponse(data, encoder=MyJSONEncoder)
         except:
-            return 'Null'
+            user.day_limit_of_messages += 1
+            user.save()
+        
+    @staticmethod
+    def get_or_create(request, user_id):
+        user, created = Telegram_user.objects.get_or_create(user_id=user_id)
+        user.username = request.POST['username']
+        user.firstname = request.POST['firstname']
+        user.lastname = request.POST['lastname']
+        user.save()
+        if created:
+            user.extra_messages = 0
+            user.day_limit_of_messages = 10
+            user.day_of_limit = datetime.date.today()
+            user.save()
+        return user
     
 
 class MyJSONEncoder(DjangoJSONEncoder):
@@ -79,3 +121,11 @@ class MyJSONEncoder(DjangoJSONEncoder):
             return obj.encode('cp1251').decode('cp1251')
         return super().default(obj)
         
+@method_decorator(csrf_exempt, name='dispatch')
+class Payment(View):
+
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pass
