@@ -23,7 +23,7 @@ class Telegram_user(models.Model):
     extra_messages = models.IntegerField(null=True)
     day_limit_of_messages = models.IntegerField(null=True)
     day_of_limit = models.DateField(null=True)
-    premium_status = models.DateTimeField(null=True)
+    premium_status = models.DateTimeField(null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.username}({self.user_id})/limit:{self.day_limit_of_messages}'

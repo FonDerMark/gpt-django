@@ -56,6 +56,7 @@ class Api(View):
     
     # запрос в чат GPT
     def post(self, request):
+        count_of_responses = 10
         user_id = request.POST['user_id']
         question = request.POST['question']
         user = self.get_or_create(request=request, user_id=user_id)
@@ -67,7 +68,6 @@ class Api(View):
                     answer = request_to_gpt(question)
                 user.day_limit_of_messages -= 1
                 user.save()
-                print(1)
             elif user.extra_messages > 0:
                 answer = request_to_gpt(question)
                 while answer == '':
@@ -75,18 +75,17 @@ class Api(View):
                     answer = request_to_gpt(question)
                 user.extra_messages -= 1
                 user.save()
-                print(2)
             else:
-                print(3)
                 answer = 'Вы исчерпали лимит сообщений'
         else:
             answer = request_to_gpt(question)
             while answer == '':
+                count_of_responses -= 1
                 time.sleep(1)
                 answer = request_to_gpt(question)
             user.extra_messages = 9
+            user.day_of_limit = datetime.date.today()
             user.save()
-
         print(answer)
         data = {
             'user_id': user_id,
@@ -103,11 +102,10 @@ class Api(View):
     @staticmethod
     def get_or_create(request, user_id):
         user, created = Telegram_user.objects.get_or_create(user_id=user_id)
-        user.username = request.POST['username']
-        user.firstname = request.POST['firstname']
-        user.lastname = request.POST['lastname']
-        user.save()
         if created:
+            user.username = request.POST['username']
+            user.firstname = request.POST['firstname']
+            user.lastname = request.POST['lastname']
             user.extra_messages = 0
             user.day_limit_of_messages = 10
             user.day_of_limit = datetime.date.today()
@@ -125,7 +123,19 @@ class MyJSONEncoder(DjangoJSONEncoder):
 class Payment(View):
 
     def get(self, request):
-        pass
+        user = Api.get_or_create(request, request.GET['user_id'])
+        data = {
+            'extra_messages': user.extra_messages,
+            'day_limit_of_messages': user.day_limit_of_messages,
 
-    def post(self, request):
-        pass
+        }
+        return JsonResponse(data)
+
+    def post(self, request, extra_messages=100):
+        user_id = request.POST['user_id']
+        user = Api.get_or_create(request=request, user_id=user_id)
+        user.extra_messages += extra_messages
+        user.save()
+        return JsonResponse({
+            'extra_messages': user.extra_messages,
+            })
