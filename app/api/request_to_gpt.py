@@ -13,4 +13,4 @@ def request_to_gpt(question, mode=default_gpt_mode):
         'forefront': lambda: gpt4free.Completion.create(Provider.ForeFront, prompt=question, model='gpt-4', token=quora.Account.create(logging=False)),
         'theb': lambda: gpt4free.Completion.create(Provider.Theb, prompt=question),
     }.get(mode)()
-    return response
+    return response.encode().decode('utf-8')
