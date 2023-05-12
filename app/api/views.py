@@ -63,26 +63,16 @@ class Api(View):
         if user.day_of_limit == datetime.date.today():
             if user.day_limit_of_messages > 0:
                 answer = request_to_gpt(question)
-                while answer == '':
-                    time.sleep(1)
-                    answer = request_to_gpt(question)
                 user.day_limit_of_messages -= 1
                 user.save()
             elif user.extra_messages > 0:
                 answer = request_to_gpt(question)
-                while answer == '':
-                    time.sleep(1)
-                    answer = request_to_gpt(question)
                 user.extra_messages -= 1
                 user.save()
             else:
                 answer = 'Вы исчерпали лимит сообщений'
         else:
             answer = request_to_gpt(question)
-            while answer == '':
-                count_of_responses -= 1
-                time.sleep(1)
-                answer = request_to_gpt(question)
             user.extra_messages = 9
             user.day_of_limit = datetime.date.today()
             user.save()

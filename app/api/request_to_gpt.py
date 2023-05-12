@@ -3,7 +3,8 @@ from gpt4free import Provider, quora
 import gpt4free
 from os import environ as env
 
-default_gpt_mode = env['GPT_MODE']
+# default_gpt_mode = env['GPT_MODE']
+default_gpt_mode = 'theb'
 
 def request_to_gpt(question, mode=default_gpt_mode):
     response = {
@@ -12,4 +13,5 @@ def request_to_gpt(question, mode=default_gpt_mode):
         'forefront': lambda: gpt4free.Completion.create(Provider.ForeFront, prompt=question, model='gpt-4', token=quora.Account.create(logging=False)),
         'theb': lambda: gpt4free.Completion.create(Provider.Theb, prompt=question),
     }.get(mode)()
+    print(response)
     return response
