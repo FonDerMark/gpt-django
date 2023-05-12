@@ -14,4 +14,7 @@ def request_to_gpt(question, mode=default_gpt_mode):
         'theb': lambda: gpt4free.Completion.create(Provider.Theb, prompt=question),
     }.get(mode)()
     print(response)
-    return response
+    try:
+        return response.decode('utf-8')
+    except:
+        return response
